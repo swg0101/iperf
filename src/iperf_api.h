@@ -91,6 +91,7 @@ typedef uint64_t iperf_size_t;
 #define OPT_RCV_TIMEOUT 27
 #define OPT_SND_TIMEOUT 28
 #define OPT_GSRO 29
+#define OPT_GAP_TIME 30
 
 /* states */
 #define TEST_START 1
@@ -120,9 +121,12 @@ int	iperf_get_test_duration( struct iperf_test* ipt );
 char	iperf_get_test_role( struct iperf_test* ipt );
 int	iperf_get_test_reverse( struct iperf_test* ipt );
 int	iperf_get_test_blksize( struct iperf_test* ipt );
+int	iperf_get_test_blksize_max( struct iperf_test* ipt );
 FILE*	iperf_get_test_outfile( struct iperf_test* ipt );
 uint64_t iperf_get_test_rate( struct iperf_test* ipt );
 int iperf_get_test_pacing_timer( struct iperf_test* ipt );
+int	iperf_get_test_gap_time( struct iperf_test* ipt );
+int	iperf_get_test_gap_time_max( struct iperf_test* ipt );
 uint64_t iperf_get_test_bytes( struct iperf_test* ipt );
 uint64_t iperf_get_test_blocks( struct iperf_test* ipt );
 int     iperf_get_test_burst( struct iperf_test* ipt );
@@ -164,9 +168,12 @@ void	iperf_set_test_reporter_interval( struct iperf_test* ipt, double reporter_i
 void	iperf_set_test_stats_interval( struct iperf_test* ipt, double stats_interval );
 void	iperf_set_test_state( struct iperf_test* ipt, signed char state );
 void	iperf_set_test_blksize( struct iperf_test* ipt, int blksize );
+void	iperf_set_test_blksize_step( struct iperf_test* ipt, int step );
 void	iperf_set_test_logfile( struct iperf_test* ipt, const char *logfile );
 void	iperf_set_test_rate( struct iperf_test* ipt, uint64_t rate );
 void    iperf_set_test_pacing_timer( struct iperf_test* ipt, int pacing_timer );
+void    iperf_set_test_gap_time( struct iperf_test* ipt, int sleep_timer );
+void    iperf_set_test_gap_time_max( struct iperf_test* ipt, int sleep_timer_max );
 void    iperf_set_test_bytes( struct iperf_test* ipt, uint64_t bytes );
 void    iperf_set_test_blocks( struct iperf_test* ipt, uint64_t blocks );
 void	iperf_set_test_burst( struct iperf_test* ipt, int burst );
@@ -391,6 +398,7 @@ enum {
     IERCVTIMEOUT = 31,      // Illegal message receive timeout
     IERVRSONLYRCVTIMEOUT = 32,  // Client receive timeout is valid only in reverse mode
     IESNDTIMEOUT = 33,      // Illegal message send timeout
+    IEGAP = 34,             // Illegal gap time value
     /* Test errors */
     IENEWTEST = 100,        // Unable to create a new test (check perror)
     IEINITTEST = 101,       // Test initialization failed (check perror)

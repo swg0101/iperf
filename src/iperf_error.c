@@ -451,7 +451,7 @@ iperf_strerror(int int_errno)
             break;
     case IEHOSTDEV:
 	    snprintf(errstr, len, "host device name (ip%%<dev>) is supported (and required) only for IPv6 link-local address");
-            break;        
+            break;
 	case IENOMSG:
 	    snprintf(errstr, len, "idle timeout for receiving data");
             break;
@@ -462,6 +462,9 @@ iperf_strerror(int int_errno)
             snprintf(errstr, len, "unable to set TCP/SCTP MSS");
             perr = 1;
             break;
+    case IEGAP:
+	    snprintf(errstr, len, "gap time must be n1[/n2] where n1<=n2 are non-negative integers of miliseconds");
+	    break;
 	default:
 	    snprintf(errstr, len, "int_errno=%d", int_errno);
 	    perr = 1;
