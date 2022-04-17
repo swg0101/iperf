@@ -73,7 +73,7 @@ iperf_udp_recv(struct iperf_stream *sp)
     uint32_t  sec, usec;
     uint64_t  pcount;
     int       r;
-    int       size = sp->settings->blksize_max;
+    int       size = sp->settings->blksize;
     int       size_max = sp->settings->blksize_max;
     int       first_packet = 0;
     double    transit = 0, d = 0;
