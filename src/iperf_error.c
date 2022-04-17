@@ -454,6 +454,9 @@ iperf_strerror(int int_errno)
     case IESETDONTFRAGMENT:
 	    snprintf(errstr, len, "unable to set IP Do-Not-Fragment flag");
             break;
+    case IEGAP:
+	    snprintf(errstr, len, "gap time must be n1[/n2] where n1<=n2 are non-negative integers of miliseconds");
+	    break;
 	default:
 	    snprintf(errstr, len, "int_errno=%d", int_errno);
 	    perr = 1;
