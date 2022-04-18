@@ -396,6 +396,10 @@ enum {
     IERCVTIMEOUT = 31,      // Illegal message receive timeout
     IERVRSONLYRCVTIMEOUT = 32,  // Client receive timeout is valid only in reverse mode
     IEGAP = 33,             // Illegal gap time value
+    IENUMPORTS = 34,        // number of ports is less than 1 or larger than server limit
+    IEPORTNUM = 35,         // requested number of parallel streams is larger than the number of ports set for the server
+    IECYGWINPORTSUDP = 36,  // different port (parameter `-p #/<num of ports>`) should be available for parallel UDP streams under Cygwin
+
     /* Test errors */
     IENEWTEST = 100,        // Unable to create a new test (check perror)
     IEINITTEST = 101,       // Test initialization failed (check perror)

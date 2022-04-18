@@ -433,7 +433,7 @@ iperf_strerror(int int_errno)
 	case IETOTALRATE:
 	    snprintf(errstr, len, "total required bandwidth is larger than server limit");
             break;
-    case IESKEWTHRESHOLD:
+        case IESKEWTHRESHOLD:
 	    snprintf(errstr, len, "skew threshold must be a positive number");
             break;
 	case IEIDLETIMEOUT:
@@ -454,6 +454,15 @@ iperf_strerror(int int_errno)
     case IESETDONTFRAGMENT:
 	    snprintf(errstr, len, "unable to set IP Do-Not-Fragment flag");
             break;
+    case IENUMPORTS:
+       snprintf(errstr, len, "number of ports is less than 1 or larger than server limit");
+        break;
+    case IEPORTNUM:
+       snprintf(errstr, len, "requested number of parallel streams is larger than the number of ports set for the server");
+        break;
+    case IECYGWINPORTSUDP:
+       snprintf(errstr, len, "different port (parameter `-p #/<num of ports>`) should be available for parallel UDP streams under Cygwin");
+        break;
     case IEGAP:
 	    snprintf(errstr, len, "gap time must be n1[/n2] where n1<=n2 are non-negative integers of miliseconds");
 	    break;
