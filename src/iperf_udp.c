@@ -561,6 +561,7 @@ iperf_udp_accept(struct iperf_test *test)
     socklen_t len;
     int       sz, s;
     int	      rc;
+    int       port;
 
     /*
      * Get the current outstanding socket.  This socket will be used to handle
@@ -640,10 +641,28 @@ iperf_udp_accept(struct iperf_test *test)
 	}
     }
 
+
+    /*
+     * Set  listening por for accepting next parallel stream request.
+     * Use differet port per stream when pool of ports was defined.
+     * (required to support parallel stream under Windows cygwin.)
+     */
+    buf = UDP_STREAM_INIT_RESP_DATAGRAM;
+    port = test->server_port;
+    if (test->num_of_server_ports > 1) {
+        if (test->server_udp_streams_accepted >= test->num_of_server_ports) {
+            i_errno = IEPORTNUM;
+            return -1;
+        }
+        test->server_udp_streams_accepted++;
+        port += test->server_udp_streams_accepted;
+        buf = port;
+    }
+
     /*
      * Create a new "listening" socket to replace the one we were using before.
      */
-    test->prot_listener = netannounce(test->settings->domain, Pudp, test->bind_address, test->bind_dev, test->server_port);
+    test->prot_listener = netannounce(test->settings->domain, Pudp, test->bind_address, test->bind_dev, port);
     if (test->prot_listener < 0) {
         i_errno = IESTREAMLISTEN;
         return -1;
@@ -652,8 +671,11 @@ iperf_udp_accept(struct iperf_test *test)
     FD_SET(test->prot_listener, &test->read_set);
     test->max_fd = (test->max_fd < test->prot_listener) ? test->prot_listener : test->max_fd;
 
-    /* Let the client know we're ready "accept" another UDP "stream" */
-    buf = UDP_CONNECT_REPLY;
+    /*
+     * Let the client know we're ready "accept" another UDP "stream",
+     * and send the listening port when applicable.
+     */
+
     if (write(s, &buf, sizeof(buf)) < 0) {
         i_errno = IESTREAMWRITE;
         return -1;
@@ -777,7 +799,7 @@ iperf_udp_connect(struct iperf_test *test)
      * Write a datagram to the UDP stream to let the server know we're here.
      * The server learns our address by obtaining its peer's address.
      */
-    buf = UDP_CONNECT_MSG;
+    buf = UDP_STREAM_INIT_REQ_DATAGRAM;                /* this can be pretty much anything */
     if (test->debug) {
         printf("Sending Connect message to Socket %d\n", s);
     }
@@ -808,6 +830,13 @@ iperf_udp_connect(struct iperf_test *test)
     if (buf != UDP_CONNECT_REPLY  && buf != LEGACY_UDP_CONNECT_REPLY) {
         i_errno = IESTREAMREAD;
         return -1;
+    }
+
+    /*
+    * If the recived value is a port number, use it as the next connection port
+    */
+    if (buf != UDP_STREAM_INIT_RESP_DATAGRAM) {
+        test->server_port = buf;
     }
 
     return s;
