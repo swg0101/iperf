@@ -89,8 +89,7 @@ typedef uint64_t iperf_size_t;
 #define OPT_IDLE_TIMEOUT 25
 #define OPT_DONT_FRAGMENT 26
 #define OPT_RCV_TIMEOUT 27
-#define OPT_GSRO 28
-#define OPT_GAP_TIME 29
+#define OPT_GAP_TIME 28
 
 /* states */
 #define TEST_START 1
