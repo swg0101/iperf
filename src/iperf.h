@@ -172,15 +172,6 @@ struct iperf_settings
     int       idle_timeout;         /* server idle time timeout */
     unsigned int snd_timeout; /* Timeout for sending tcp messages in active mode, in us */
     struct iperf_time rcv_timeout;  /* Timeout for receiving messages in active mode, in us */
-#ifdef HAVE_UDP_SEGMENT
-    int       gso;
-    int       gso_dg_size;
-    int       gso_bf_size;
-#endif
-#ifdef HAVE_UDP_GRO
-    int       gro;
-    int       gro_bf_size;
-#endif
 };
 
 struct iperf_test;
